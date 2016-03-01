@@ -75,7 +75,9 @@ test_quit $? "ERROR: Could not push image $AWS_ACCOUNT_NUM.dkr.ecr.$AWS_REGION.a
 echo "Pushed tag: $AWS_ACCOUNT_NUM.dkr.ecr.$AWS_REGION.amazonaws.com/$REPO_NAME:latest"
 
 # Clean up our tags.
-docker rmi $REPO_NAME:old-repo > $OUTPUT
-test_quit $? "ERROR: Could not remove tag $REPO_NAME:old-repo"
+if [ $REPO_NOT_EXIST -eq 0 ]; then
+    docker rmi $REPO_NAME:old-repo > $OUTPUT
+    test_quit $? "ERROR: Could not remove tag $REPO_NAME:old-repo"
+fi
 
 echo "Finished building $REPO_NAME:$IMAGE_VERSION"
