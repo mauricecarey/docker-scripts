@@ -65,8 +65,11 @@ if [ -z "${setup}" ] && [ -r ${DEFAULT_SETUP} ]; then
     setup=${DEFAULT_SETUP}
 fi
 if [ -n "${setup}" ] && [ -x ${setup} ]; then
-    base_dir="$(cd "$(dirname "$1")"; pwd)/$(basename "$1")"
-    (exec ${base_dir}/${setup})
+    setup="$(cd "$(dirname "${setup}")"; pwd)/$(basename "${setup}")"
+    [ "${debug}" == "on" ] && echo "Setup script: ${setup}"
+    (exec ${setup})
+    [ "$?" -gt 0 ] && echo "Setup failed. Stopping." && exit 1
+    [ "${debug}" == "on" ] && echo "Setup completed."
 fi
 
 # Print out debug info if active.
